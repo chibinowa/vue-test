@@ -1,6 +1,6 @@
 <template>
   <div id="control-member-list">
-    <h1>Members Test</h1>
+    <h1>Members Test2</h1>
     <ul>
       <li v-for="val in orderMembers('lv')">
         <div class="name">{{ val.name }}</div>
