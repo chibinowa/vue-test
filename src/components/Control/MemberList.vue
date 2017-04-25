@@ -54,6 +54,7 @@
   }
   h1 {
     font-family: 'Georgia';
+    color: #ffbb00;
   }
   .loading {
     display: block;
