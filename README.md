@@ -1,4 +1,4 @@
-# vue-demo-guild
+# vue-test
 
 > A Vue.js project
 
