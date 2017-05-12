@@ -7,9 +7,10 @@
     "keep_array_indentation": true
   },
   "html": {
-    "newline_between_rules": false
+    "newline_between_rules": true
   },
   "vue": {
-    "keep_array_indentation": true
+    "keep_array_indentation": true,
+    "newline_between_rules": false
   }
 }

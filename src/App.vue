@@ -11,7 +11,6 @@
     <router-view class="router"></router-view>
   </div>
 </template>
-
 <script>
 export default {
   name: 'app'
@@ -40,16 +39,13 @@ body {
   margin: 0;
   font-size: 14px;
 }
-
 .en-header {
   font-family: 'Georgia'
 }
-
 .router {
   border: 1px solid #ccc;
   padding: 10px;
 }
-
 button {
   padding: 4px 12px;
   border: none;
@@ -57,19 +53,16 @@ button {
   background: #009dea;
   color: #fff;
 }
-
 input[type="text"],
 input:not([type]) {
   padding: 4px;
   border: 1px solid #ddd;
   border-radius: 2px;
 }
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity .4s;
 }
-
 .fade-enter,
 .fade-leave-to {
   opacity: 0;

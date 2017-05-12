@@ -23,9 +23,9 @@ const apiError = (error) => Promise.reject(error.message || 'ERROR')
 
 export default {
   getMembers: () =>
-    axios.get('api/item/list.json').then(apiSuccess).catch(apiError),
+    axios.get('/vue-test/api/item/list.json').then(apiSuccess).catch(apiError),
   putMember: (item) =>
-    axios.put('api/item/put.php', { item: item }).then(apiSuccess).catch(apiError),
+    axios.put('/vue-test/api/item/put.php', { item: item }).then(apiSuccess).catch(apiError),
   postMember: (item) =>
-    axios.post('api/item/post.php', { item: item }).then(apiSuccess).catch(apiError)
+    axios.post('/vue-test/api/item/post.php', { item: item }).then(apiSuccess).catch(apiError)
 }

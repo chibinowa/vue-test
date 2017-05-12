@@ -3,7 +3,9 @@
     <h3>Members</h3>
     <ul>
       <li v-for="val in orderMembers('lv')">
-        <div class="name"><router-link :to="{name:'member-detail', params: { id: val.id }}">{{ val.name }}</router-link></div>
+        <div class="name">
+          <router-link :to="{name:'member-detail', params: { id: val.id }}">{{ val.name }}</router-link>
+        </div>
         <div class="lv">Lv.{{ val.lv }}</div>
         <div class="control">
           <button @click="editid=val.id">編集</button>
@@ -36,18 +38,15 @@ export default {
   },
   created() {
     // 作成時にメンバーリストを取得
-    if (!this.orderMembers('lv').length) {
-      this.$store.dispatch('member/load').then(() => {
-        this.loading = false
-        console.log('取得完了')
-      }).catch(e => {
-        console.log(e)
-      })
-    } else {
+    this.$store.dispatch('member/load').then(() => {
       this.loading = false
-    }
+      console.log('取得完了')
+    }).catch(e => {
+      console.log(e)
+    })
   },
   beforeDestroy() {
+    console.log('beforeDestroy')
     this.$store.commit('member/destroy')
   },
   components: { MemberModal }
