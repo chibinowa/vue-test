@@ -3,7 +3,7 @@ import axios from 'axios'
 // 疑似遅延用タイマー
 const demoTimer = () => {
   return new Promise((resolve) => {
-    setTimeout(resolve, 500)
+    setTimeout(resolve, 0)
   })
 }
 

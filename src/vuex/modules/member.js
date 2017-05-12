@@ -54,7 +54,7 @@ const member = {
   },
   actions: {
     // 全メンバーを読み込む
-    loaded({ commit }) {
+    load({ commit }) {
       return api.getMembers()
         .then(entry => {
           commit('setMembers', entry)
