@@ -23,7 +23,8 @@ const member = {
       findIndex(state.members, o => o.id === id),
     // メンバーIDからメンバー内容を返す
     findMemberById: (state) => (id) =>
-      find(state.members, o => o.id === id)
+      find(state.members, o => o.id === id),
+    firstMember: (state) => state.members[0]
   },
   mutations: {
     // 全メンバーを代入
@@ -37,7 +38,7 @@ const member = {
     },
     // メンバーを追加
     addMember(state, payload) {
-      Vue.set(state.members, state.members.length, payload)
+      state.members.push(payload)
     },
     // メンバーリストを破棄
     destroy(state) {
@@ -54,6 +55,12 @@ const member = {
   },
   actions: {
     // 全メンバーを読み込む
+    get({ commit }, id) {
+      return api.getMember(id)
+        .then(entry => {
+          commit('addMember', entry)
+        })
+    },
     load({ commit }) {
       return api.getMembers()
         .then(entry => {
@@ -64,18 +71,28 @@ const member = {
     saveMember({ commit }, member) {
       // IDが-1なら追加
       const type = member.id === -1 ? api.postMember : api.putMember
-      return type()
+      return type(member.id, member)
         .then(entry => {
           // サーバー側で成功したらフロントのデータを更新する
           if (member.id === -1) {
             commit('addMember', entry)
           } else {
-            commit('updateMember', member)
+            commit('updateMember', entry)
           }
         })
         .catch(error => {
           // サーバー側で失敗したらエラーをセット
           commit('setError', error)
+        })
+    },
+    delete({ commit }, id) {
+      return api.deleteMember(id)
+        .then(entry => {
+          commit('destroy')
+          api.getMembers()
+            .then(entry => {
+              commit('setMembers', entry)
+            })
         })
     }
   }

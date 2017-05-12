@@ -2,19 +2,21 @@
   <div id="member-list">
     <h3>Members</h3>
     <ul>
-      <li v-for="val in orderMembers('lv')">
+      <li v-for="val in orderMembers('sort')">
         <div class="name">
+          [{{ val.id }}]
           <router-link :to="{name:'member-detail', params: { id: val.id }}">{{ val.name }}</router-link>
         </div>
         <div class="lv">Lv.{{ val.lv }}</div>
         <div class="control">
+          <button @click="$store.dispatch('member/delete', val.id)">削除</button>
           <button @click="editid=val.id">編集</button>
         </div>
       </li>
       <li class="loading" v-if="loading">loading</li>
     </ul>
     <div class="add">
-      <button @click="editid=-1">追加</button> ←かばんちゃんだけ1回のみ正常に追加出来るボタン
+      <button @click="editid=-1">追加</button>
     </div>
     <member-modal :editid="editid" @close="editid=null" />
   </div>
@@ -99,7 +101,7 @@ li:not(:first-child) {
 }
 
 .control {
-  width: 100px;
+  width: 120px;
   text-align: right;
 }
 

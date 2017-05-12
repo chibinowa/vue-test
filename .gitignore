@@ -1,5 +1,6 @@
 .DS_Store
 .editorconfig
+.jsbeautifyrc
 node_modules/
 dist/
 npm-debug.log*
