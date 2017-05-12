@@ -8,20 +8,20 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: require('@/components/Home')
+      component: require('@/components/PageHome')
     },
     {
       path: '/member',
-      component: require('@/components/member.vue'),
+      component: require('@/components/PageMember'),
       children: [
         {
           path: '/',
-          component: require('@/components/member/List')
+          component: require('@/components/member/PageList')
         },
         {
           path: ':id',
           name: 'member-detail',
-          component: require('@/components/member/Detail')
+          component: require('@/components/member/PageDetail')
         }
       ]
     }

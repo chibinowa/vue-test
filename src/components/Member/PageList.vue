@@ -1,5 +1,5 @@
 <template>
-  <div id="control-member-list">
+  <div id="member-list">
     <h3>Members</h3>
     <ul>
       <li v-for="val in orderMembers('lv')">
@@ -22,7 +22,7 @@
 import { mapGetters } from 'vuex'
 import MemberModal from './Modal'
 export default {
-  name: 'control-member-list',
+  name: 'member-list',
   data() {
     return {
       loading: true,
@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style scoped>
-#control-member-list {
+#member-list {
   margin: auto;
   max-width: 500px;
 }

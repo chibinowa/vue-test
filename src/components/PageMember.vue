@@ -8,11 +8,15 @@
 <script>
 export default {
   name: 'control',
+  props: {
+    reset: Boolean
+  },
   data() {
     return {}
   },
+  created() {
+  },
   beforeDestroy() {
-   // this.$store.commit('member/destroy')
   }
 }
 </script>
