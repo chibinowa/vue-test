@@ -42,7 +42,9 @@ const demox = {
     const maxSort = maxBy(DemoDatabase, 'sort')
     const newdata = Object.assign({}, arg.item, {
       id: ++LastId,
-      sort: maxSort ? maxSort.sort + 1 : 0
+      sort: maxSort ? maxSort.sort + 1 : 0,
+      name: arg.item.name === '' ? 'noname' : arg.item.name,
+      lv: arg.item.lv === '' ? 10 : arg.item.lv
     })
     return { data: { status: true, entry: newdata } }
   }),

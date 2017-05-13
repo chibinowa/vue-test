@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div id="control-modal" v-if="editid!=null" @click.self="$emit('close')">
+    <div id="member-modal" v-if="editid!=null" @click.self="$emit('close')">
       <div class="body">
         <h1>{{ title }}</h1>
         <form @submit.prevent="onSaveMember">
@@ -27,7 +27,7 @@
 <script>
   import { mapGetters } from 'vuex'
   export default {
-    name: 'control-member-modal',
+    name: 'member-modal',
     props: { editid: Number },
     data() {
       return {
@@ -68,7 +68,7 @@
 
 </script>
 <style scoped>
-  #control-modal {
+  #member-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -82,7 +82,7 @@
   h1 {
     margin: 0;
     padding: 5px 10px;
-    background: #e2f1f3;
+    background: #f5f5f5;
     font-size: 14px;
   }
   footer {

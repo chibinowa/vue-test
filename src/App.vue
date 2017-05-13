@@ -2,18 +2,23 @@
   <div id="app">
     <ul>
       <li>
-        <router-link to="/">index</router-link>
+        <router-link to="/" exact>index</router-link>
       </li>
       <li>
         <router-link to="/member">member</router-link>
       </li>
     </ul>
-    <router-view class="router"></router-view>
+    <transition name="fade" mode="out-in" @before-leave="$refs.overlay.start()" @enter="$refs.overlay.end()">
+      <router-view class="view"></router-view>
+    </transition>
+    <view-loading ref="overlay"></view-loading>
   </div>
 </template>
 <script>
+import ViewLoading from '@/components/ViewLoading'
 export default {
-  name: 'app'
+  name: 'app',
+  components: { ViewLoading }
 }
 </script>
 <style scoped>
@@ -24,33 +29,67 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 ul {
+  position: absolute;
   display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
-  background: #eee;
+  width: 100%;
+  background: #d0af91;
+  color: #fff;
 }
-li {
-  padding: 5px;
+ul a {
+  display: block;
+  line-height: 40px;
+  padding: 0 10px;
+  text-decoration: none;
+  transition: background-color 1s;
+}
+.router-link-active {
+  background: rgba(0, 0, 0, .1);
+}
+.view {
+  padding-top: 40px;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .4s;
+}
+.fade-enter-active {
+  transition-delay: .4s;
+}
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+.fade-enter {
+  position: absolute;
 }
 </style>
 <style>
-body {
+html,
+body,
+#app {
+  box-sizing: border-box;
+  height: 100%;
   margin: 0;
+}
+body {
   font-size: 14px;
 }
 .en-header {
   font-family: 'Georgia'
 }
 .router {
-  border: 1px solid #ccc;
   padding: 10px;
 }
 button {
   padding: 4px 12px;
   border: none;
   border-radius: 2px;
-  background: #009dea;
+  background: #5db4bd;
   color: #fff;
 }
 input[type="text"],
@@ -59,12 +98,15 @@ input:not([type]) {
   border: 1px solid #ddd;
   border-radius: 2px;
 }
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .4s;
+a {
+  color: currentColor;
 }
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+h1 {
+  margin: 0;
+  background: #e3f1f3;
+  color: #5db4bd;
+  font-size: 12px;
+  padding: 10px;
+  text-transform: uppercase;
 }
 </style>
