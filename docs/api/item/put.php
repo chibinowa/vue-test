@@ -1,4 +1,0 @@
-{
-  "status": true,
-  "entry": {}
-}

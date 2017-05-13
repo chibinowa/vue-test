@@ -1,8 +1,0 @@
-{
-  "status": true,
-  "entry": [
-    { "id": 1, "name": "サーバル", "lv": 30, "sort": 2 },
-    { "id": 2, "name": "フェネック", "lv": 20, "sort": 3 },
-    { "id": 3, "name": "アライさん", "lv": 10, "sort": 1 }
-  ]
-}
