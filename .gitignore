@@ -3,6 +3,7 @@
 .jsbeautifyrc
 node_modules/
 dist/
+static/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

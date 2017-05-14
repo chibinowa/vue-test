@@ -8,6 +8,7 @@ const member = {
   // ネームスペースを利用する
   namespaced: true,
   state: {
+    currentMember: null,
     members: [],
     error: null
   },
@@ -15,28 +16,33 @@ const member = {
     // エラーメッセージを返す
     error: (state) =>
       state.error,
-    // 引数の項目でソートして返す
+    // カレントメンバーを返す
+    currentMember: (state) => state.currentMember,
+    // メンバーリストを引数の項目でソートして返す
     orderMembers: (state) => (field) =>
       orderBy(state.members, field, 'asc'),
-    // メンバーIDから配列インデックスを返す
+    // メンバーリストのメンバーIDから配列インデックスを返す
     findIndexById: (state) => (id) =>
       findIndex(state.members, o => o.id === id),
-    // メンバーIDからメンバー内容を返す
+    // メンバーリストのメンバーIDからメンバー内容を返す
     findMemberById: (state) => (id) =>
-      find(state.members, o => o.id === id),
-    firstMember: (state) => state.members[0]
+      find(state.members, o => o.id === id)
   },
   mutations: {
-    // 全メンバーを代入
+    // カレントメンバーをセット
+    setCurrentMember(state, payload) {
+      state.currentMember = payload
+    },
+    // メンバーリストをセット
     setMembers(state, members) {
       state.members = members
     },
-    // メンバーを更新
+    // メンバーリストを更新
     updateMember(state, payload) {
       const idx = findIndex(state.members, o => o.id === payload.id)
       Vue.set(state.members, idx, payload)
     },
-    // メンバーを追加
+    // メンバーリストに追加
     addMember(state, payload) {
       state.members.push(payload)
     },
@@ -58,7 +64,7 @@ const member = {
     get({ commit }, id) {
       return api.getMember(id)
         .then(entry => {
-          commit('addMember', entry)
+          commit('setCurrentMember', entry)
         })
     },
     load({ commit }) {
@@ -67,13 +73,13 @@ const member = {
           commit('setMembers', entry)
         })
     },
-    // メンバーを保存する
+    // メンバーを保存
     saveMember({ commit }, member) {
       // IDが-1なら追加
       const type = member.id === -1 ? api.postMember : api.putMember
       return type(member.id, member)
         .then(entry => {
-          // サーバー側で成功したらフロントのデータを更新する
+          // サーバー側で成功したらフロントのデータを更新
           if (member.id === -1) {
             commit('addMember', entry)
           } else {
@@ -85,6 +91,7 @@ const member = {
           commit('setError', error)
         })
     },
+    // メンバーを削除
     delete({ commit }, id) {
       return api.deleteMember(id)
         .then(entry => {
