@@ -35,7 +35,7 @@ export default {
       this.state = 'leave'
       setTimeout(() => {
         this.state = ''
-      }, 1400)
+      }, 1200)
     }
   }
 }
@@ -67,7 +67,7 @@ export default {
 .overlay.enter {
   display: flex;
   opacity: 1;
-  animation: router-transition-in 0.4s;
+  animation: router-transition-in .4s;
 }
 .overlay.leave {
   display: flex;

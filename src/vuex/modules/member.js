@@ -14,12 +14,11 @@ const member = {
   },
   getters: {
     // エラーメッセージを返す
-    error: (state) =>
-      state.error,
+    error: (state) => state.error,
     // カレントメンバーを返す
     currentMember: (state) => state.currentMember,
     // メンバーリストを引数の項目でソートして返す
-    orderMembers: (state) => (field) =>
+    orderList: (state) => (field) =>
       orderBy(state.members, field, 'asc'),
     // メンバーリストのメンバーIDから配列インデックスを返す
     findIndexById: (state) => (id) =>
@@ -30,20 +29,20 @@ const member = {
   },
   mutations: {
     // カレントメンバーをセット
-    setCurrentMember(state, payload) {
+    setCurrent(state, payload) {
       state.currentMember = payload
     },
-    // メンバーリストをセット
-    setMembers(state, members) {
-      state.members = members
-    },
     // メンバーリストを更新
-    updateMember(state, payload) {
+    update(state, payload) {
       const idx = findIndex(state.members, o => o.id === payload.id)
       Vue.set(state.members, idx, payload)
     },
+    // メンバーリストをセット
+    setList(state, members) {
+      state.members = members
+    },
     // メンバーリストに追加
-    addMember(state, payload) {
+    add(state, payload) {
       state.members.push(payload)
     },
     // メンバーリストを破棄
@@ -64,26 +63,26 @@ const member = {
     get({ commit }, id) {
       return api.getMember(id)
         .then(entry => {
-          commit('setCurrentMember', entry)
+          commit('setCurrent', entry)
         })
     },
     load({ commit }) {
       return api.getMembers()
         .then(entry => {
-          commit('setMembers', entry)
+          commit('setList', entry)
         })
     },
     // メンバーを保存
-    saveMember({ commit }, member) {
+    save({ commit }, member) {
       // IDが-1なら追加
       const type = member.id === -1 ? api.postMember : api.putMember
       return type(member.id, member)
         .then(entry => {
           // サーバー側で成功したらフロントのデータを更新
           if (member.id === -1) {
-            commit('addMember', entry)
+            commit('add', entry)
           } else {
-            commit('updateMember', entry)
+            commit('update', entry)
           }
         })
         .catch(error => {
@@ -98,7 +97,7 @@ const member = {
           commit('destroy')
           api.getMembers()
             .then(entry => {
-              commit('setMembers', entry)
+              commit('setList', entry)
             })
         })
     }

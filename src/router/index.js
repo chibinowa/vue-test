@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 Vue.use(Router)
 
 export default new Router({
+  // ヒストリモードはハッシュがつかなくなる ※mod_rewrite等が必要
   mode: 'history',
+  // サブディレクトリがある場合ベースに設定する
   base: '/vue-test/',
   routes: [
     {
@@ -14,6 +15,7 @@ export default new Router({
     {
       path: '/member',
       component: require('@/components/PageMember'),
+      // ネストされたルート
       children: [
         {
           path: '/',

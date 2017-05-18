@@ -1,7 +1,7 @@
 <template>
   <div id="member-list">
     <ul>
-      <li v-for="val in orderMembers('sort')">
+      <li v-for="val in orderList('sort')">
         <div class="name">
           [{{ val.id }}]
           <router-link :to="{name:'member-detail', params: { id: val.id }}">{{ val.name }}</router-link>
@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     ...mapGetters('member', [
-      'orderMembers'
+      'orderList'
     ])
   },
   beforeRouteEnter(route, redirect, next) {

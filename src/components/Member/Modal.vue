@@ -57,7 +57,7 @@
     methods: {
       // 保存ボタン＆サブミットで内部データをストアに送る
       onSaveMember() {
-        this.$store.dispatch('member/saveMember', this.intarnal).then(() => {
+        this.$store.dispatch('member/save', this.intarnal).then(() => {
           // 結果にエラーが無ければウィンドウを閉じる
           // エラーがあればメッセージとして表示
           if (!this.error) this.$emit('close')
