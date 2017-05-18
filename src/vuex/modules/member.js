@@ -4,6 +4,12 @@ import api from '@/api/member'
 // lodashの特定のメソッドだけ使う
 import { orderBy, findIndex, find } from 'lodash'
 
+export const templateMember = {
+  id: -1,
+  name: '',
+  lv: ''
+}
+
 const member = {
   // ネームスペースを利用する
   namespaced: true,

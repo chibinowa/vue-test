@@ -16,7 +16,7 @@
 import { mapGetters } from 'vuex'
 import store from '@/vuex'
 export default {
-  name: 'detail',
+  name: 'member-detail',
   data() {
     return {}
   },
