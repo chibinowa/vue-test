@@ -42,7 +42,6 @@ export default {
     })
   },
   beforeDestroy() {
-    console.log('beforeDestroy')
     this.$store.commit('member/destroy')
   },
   components: { MemberModal }
