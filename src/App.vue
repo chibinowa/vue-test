@@ -93,6 +93,7 @@ button {
   color: #fff;
 }
 input[type="text"],
+input[type="password"],
 input:not([type]) {
   padding: 4px;
   border: 1px solid #ddd;

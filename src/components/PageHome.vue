@@ -10,7 +10,7 @@
         </dd>
         <dt>パスワード</dt>
         <dd>
-          <input type="text" size="20" v-model="password">
+          <input type="password" size="20" v-model="password">
         </dd>
       </dl>
       <button @click="login">ログイン</button>
@@ -22,15 +22,22 @@
 <script>
 // import axios from 'axios'
 import firebase from 'firebase'
-import { DemoEMail, DemoPassword } from '@/api/firebase.config'
 
 export default {
   name: 'home',
   data() {
     return {
-      email: DemoEMail,
-      password: DemoPassword,
-      message: ''
+      email: '',
+      password: ''
+    }
+  },
+  computed: {
+    message() {
+      if (this.$store.getters['auth/user'].auth) {
+        return 'ログイン中'
+      } else {
+        return 'ログインしてません'
+      }
     }
   },
   methods: {
@@ -40,15 +47,6 @@ export default {
     logout() {
       firebase.auth().signOut()
     }
-  },
-  created() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.message = `${user.email}でログイン中`
-      } else {
-        this.message = `ログインしてない`
-      }
-    })
   }
 }
 </script>

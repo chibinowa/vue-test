@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/vuex'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   // ヒストリモードはハッシュがつかなくなる ※mod_rewrite等が必要
   mode: 'history',
   // サブディレクトリがある場合ベースに設定する
@@ -15,6 +16,7 @@ export default new Router({
     {
       path: '/member',
       component: require('@/components/PageMember'),
+      meta: { requiresAuth: true },
       // ネストされたルート
       children: [
         {
@@ -30,3 +32,21 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // 認証が必要なページでログイン情報が無ければリダイレクト
+    if (store.getters['auth/user'].auth !== true) {
+      next({
+        path: '/',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+export default router
