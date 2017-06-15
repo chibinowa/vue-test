@@ -5,7 +5,7 @@ Vue.use(Router)
 
 const router = new Router({
   // ヒストリモードはハッシュがつかなくなる ※mod_rewrite等が必要
-  mode: 'history',
+  // mode: 'history',
   // サブディレクトリがある場合ベースに設定する
   base: '/vue-test/',
   routes: [
