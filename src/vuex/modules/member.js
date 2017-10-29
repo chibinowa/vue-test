@@ -2,7 +2,9 @@ import Vue from 'vue'
 // 先に作ったAPIモジュールを使う
 import api from '@/api/member'
 // lodashの特定のメソッドだけ使う
-import { orderBy, findIndex, find } from 'lodash'
+import orderBy from 'lodash/orderBy'
+import findIndex from 'lodash/findIndex'
+import find from 'lodash/find'
 
 const member = {
   // ネームスペースを利用する

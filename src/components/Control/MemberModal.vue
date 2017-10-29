@@ -1,11 +1,11 @@
 <template>
   <transition name="modal">
-    <div class="modal" v-if="editid!=null" @click.self="$emit('close')">
+    <div class="modal" @click.self="$emit('close')">
       <div class="body">
         <h1>{{ title }}</h1>
         <button type="submit" style="display:none"></button>
         <transition name="modal">
-          <div v-if="error" class="error" @click.self="$store.commit('item/resetError')">{{ error }}</div>
+          <div v-if="error" class="error" @click.self="$store.commit('member/resetError')">{{ error }}</div>
         </transition>
         <dl>
           <dt>名前</dt>
@@ -31,33 +31,24 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import cloneDeep from 'lodash/cloneDeep'
 export default {
   name: 'control-member-modal',
   props: { editid: Number },
   data() {
     return {
-      intarnal: {}
+      intarnal: {
+        id: -1,
+        name: 'noname',
+        lv: 10
+      }
     }
   },
   computed: {
-    title() { return this.editid === -1 ? '追加' : '編集' },
-    ...mapGetters('member', [
-      'findMemberById',
-      'error'
-    ])
-  },
-  watch: {
-    editid() {
-      // IDがnull以外ならメンバーデータをクローンする
-      if (this.editid != null) {
-        // デフォルトデータの作成はストアや別モジュールに書いたほうが良さげかも？
-        this.intarnal = Object.assign({
-          id: -1,
-          name: '',
-          lv: ''
-        }, this.findMemberById(this.editid))
-      }
-    }
+    title() {
+      return this.editid === -1 ? '追加' : '編集'
+    },
+    ...mapGetters('member', ['findMemberById', 'error'])
   },
   methods: {
     // 保存ボタン＆サブミットで内部データをストアに送る
@@ -68,9 +59,13 @@ export default {
         if (!this.error) this.$emit('close')
       })
     }
+  },
+  created() {
+    if (this.editid > 0) {
+      this.intarnal = cloneDeep(this.findMemberById(this.editid))
+    }
   }
 }
-
 </script>
 <style scoped>
 .modal {
@@ -80,7 +75,7 @@ export default {
   display: flex;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, .4);
+  background: rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
 }
@@ -103,7 +98,7 @@ dl {
 dl::after {
   display: table;
   clear: both;
-  content: " ";
+  content: ' ';
 }
 dt {
   float: left;
@@ -132,7 +127,7 @@ form {
 }
 .modal-enter-active,
 .modal-leave-active {
-  transition: opacity .4s;
+  transition: opacity 0.4s;
 }
 .modal-enter,
 .modal-leave-to {
@@ -140,7 +135,7 @@ form {
 }
 .modal-enter-active .body,
 .modal-leave-active .body {
-  transition: opacity .3s ease, transform .3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 .modal-enter .body,
 .modal-leave-to .body {

@@ -2,7 +2,7 @@
   <div id="control-member-list">
     <h1>Members</h1>
     <ul>
-      <li v-for="val in orderList('lv')">
+      <li v-for="val in orderList('lv')" :key="val.id">
         <div class="name">{{ val.name }}</div>
         <div class="lv">Lv.{{ val.lv }}</div>
         <div class="control">
@@ -14,7 +14,7 @@
     <div class="add">
       <button @click="editid=-1">追加</button>
     </div>
-    <control-member-modal :editid="editid" @close="editid=null"></control-member-modal>
+    <control-member-modal :editid="editid" @close="editid=null" v-if="editid!=null"></control-member-modal>
   </div>
 </template>
 <script>
