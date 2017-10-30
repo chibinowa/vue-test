@@ -10,6 +10,14 @@ const store = new Vuex.Store({
     auth,
     member
   },
+  state: {
+    overlay: false
+  },
+  mutations: {
+    setOverlay(state, mode) {
+      state.overlay = mode
+    }
+  },
   strict: process.env.NODE_ENV !== 'production'
 })
 

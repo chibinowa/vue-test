@@ -3,6 +3,9 @@
 module.exports = {
   root: true,
   parser: 'babel-eslint',
+  globals: {
+    "log": true
+  },
   parserOptions: {
     sourceType: 'module'
   },

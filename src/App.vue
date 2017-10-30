@@ -8,10 +8,10 @@
         <router-link to="/member">member</router-link>
       </li>
     </ul>
-    <transition name="fade" mode="out-in" @before-leave="$refs.overlay.start()" @enter="$refs.overlay.end()">
+    <transition name="fade" mode="out-in" @after-enter="$store.commit('setOverlay', false)">
       <router-view class="view"></router-view>
     </transition>
-    <view-loading ref="overlay"></view-loading>
+    <view-loading></view-loading>
   </div>
 </template>
 <script>
@@ -46,7 +46,7 @@ ul a {
   transition: background-color 1s;
 }
 .router-link-active {
-  background: rgba(0, 0, 0, .1);
+  background: rgba(0, 0, 0, 0.1);
 }
 .view {
   padding-top: 40px;
@@ -55,13 +55,10 @@ ul a {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .4s;
-}
-.fade-enter-active {
-  transition-delay: .4s;
+  transition: opacity 0.4s;
 }
 .fade-enter,
-.fade-leave-active {
+.fade-leave-to {
   opacity: 0;
 }
 .fade-enter {
@@ -80,7 +77,7 @@ body {
   font-size: 14px;
 }
 .en-header {
-  font-family: 'Georgia'
+  font-family: 'Georgia';
 }
 .router {
   padding: 10px;
@@ -92,8 +89,8 @@ button {
   background: #5db4bd;
   color: #fff;
 }
-input[type="text"],
-input[type="password"],
+input[type='text'],
+input[type='password'],
 input:not([type]) {
   padding: 4px;
   border: 1px solid #ddd;

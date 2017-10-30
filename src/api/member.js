@@ -1,5 +1,7 @@
 // import axios from 'axios'
-import { find, maxBy, remove } from 'lodash'
+import find from 'lodash/find'
+import maxBy from 'lodash/maxBy'
+import remove from 'lodash/remove'
 
 let LastId = 3
 const DemoDatabase = [
@@ -7,24 +9,6 @@ const DemoDatabase = [
   { 'id': 2, 'name': 'フェネック', 'lv': 20, 'sort': 3 },
   { 'id': 3, 'name': 'アライさん', 'lv': 10, 'sort': 1 }
 ]
-
-// 疑似遅延用タイマー
-const demoTimer = () => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, 100)
-  })
-}
-
-// 成功の処理
-const apiSuccess = (response) => {
-  return demoTimer().then(() => {
-    if (response.data.status === true) {
-      return response.data.entry
-    } else {
-      return Promise.reject(response.data)
-    }
-  })
-}
 
 // デモ用 mockAPI
 const demox = {
@@ -54,8 +38,22 @@ const demox = {
   })
 }
 
-// 失敗の処理
-const apiError = (error) => Promise.reject(error.message || 'ERROR')
+// 疑似遅延用タイマー
+const demoTimer = () => {
+  return new Promise((resolve) => setTimeout(resolve, 100))
+}
+
+// 通信成功の処理
+const apiSuccess = (response) => {
+  if (response.data.status === true) {
+    return Promise.resolve(response.data.entry)
+  } else {
+    return Promise.reject('APIによるエラー')
+  }
+}
+
+// 通信失敗の処理
+const apiError = (error) => Promise.reject(error.message || error || 'ERROR')
 
 /*
 GET    /member/list/:page   リスト取得 最大10件づつ
@@ -66,7 +64,7 @@ DELETE /member/:id          削除
 */
 export default {
   getMembers: () =>
-    demox.get('/vue-test/api/member/list').then(apiSuccess).catch(apiError),
+    demox.get('/vue-test/api/member/list').then(apiSuccess),
   postMember: (id, item) =>
     demox.post('/vue-test/api/member', { item: item }).then(apiSuccess).catch(apiError),
   getMember: (id) =>

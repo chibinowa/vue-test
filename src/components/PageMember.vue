@@ -2,11 +2,11 @@
   <div>
     <h1>member page</h1>
     <div class="child-view-wrapper">
-    <transition name="child-view" mode="out-in">
-      <keep-alive>
-        <router-view class="child-view"></router-view>
-      </keep-alive>
-    </transition>
+      <transition name="child-view" mode="out-in">
+        <keep-alive>
+          <router-view class="child-view"></router-view>
+        </keep-alive>
+      </transition>
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
   transform: translateX(-10px);
   opacity: 0;
 }
-.child-view-leave-active {
+.child-view-leave-to {
   transform: translateX(10px);
   opacity: 0;
 }

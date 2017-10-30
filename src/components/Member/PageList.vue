@@ -1,7 +1,7 @@
 <template>
   <div id="member-list">
     <ul>
-      <li v-for="val in orderList('sort')">
+      <li v-for="val in orderList('sort')" :key="val.id">
         <div class="name">
           [{{ val.id }}]
           <router-link :to="{name:'member-detail', params: { id: val.id }}">{{ val.name }}</router-link>
@@ -16,7 +16,7 @@
     <div class="add">
       <button @click="editid=-1">追加</button>
     </div>
-    <member-modal :editid="editid" @close="editid=null" />
+    <control-member-modal :editid="editid" @close="editid=null" v-if="editid!=null"></control-member-modal>
   </div>
 </template>
 
@@ -32,19 +32,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('member', [
-      'orderList'
-    ])
+    ...mapGetters('member', ['orderList'])
   },
   beforeRouteEnter(route, redirect, next) {
     store.dispatch('member/load').then(() => {
-      next()
+      setTimeout(() => {
+        next()
+      }, 300)
     })
   },
   beforeDestroy() {
     this.$store.commit('member/destroy')
   },
-  components: { MemberModal }
+  components: { 'control-member-modal': MemberModal }
 }
 </script>
 
