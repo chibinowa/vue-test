@@ -11,4 +11,5 @@ test/unit/coverage
 test/e2e/reports
 selenium-debug.log
 firebase.config.js
+package-lock.json
 thumbs.db
