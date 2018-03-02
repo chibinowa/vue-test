@@ -12,11 +12,14 @@ const DemoDatabase = [
 
 // デモ用 mockAPI
 const demox = {
-  get: (path, arg) => demoTimer().then(() => {
+  get: (path, arg) => new Promise(resolve => {
+    const delay = [0, 0, 400, 1000]
     if (path === '/vue-test/api/member/list') {
-      return { data: { status: true, entry: DemoDatabase } }
+      resolve({ data: { status: true, entry: DemoDatabase } })
     } else {
-      return { data: { status: true, entry: find(DemoDatabase, o => o.id === arg.id) } }
+      setTimeout(() => {
+        resolve({ data: { status: true, entry: find(DemoDatabase, o => o.id === arg.id) } })
+      }, delay[Math.floor(Math.random() * delay.length)])
     }
   }),
   put: (path, arg) => demoTimer().then(() => {
@@ -40,11 +43,11 @@ const demox = {
 
 // 疑似遅延用タイマー
 const demoTimer = () => {
-  return new Promise((resolve) => setTimeout(resolve, 100))
+  return new Promise((resolve) => setTimeout(resolve, 400))
 }
 
 // 通信成功の処理
-const apiSuccess = (response) => {
+const apiSuccess = response => {
   if (response.data.status === true) {
     return Promise.resolve(response.data.entry)
   } else {

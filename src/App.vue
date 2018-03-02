@@ -2,16 +2,16 @@
   <div id="app">
     <ul>
       <li>
-        <router-link to="/" exact>index</router-link>
+        <router-link to="/" exact>Index</router-link>
       </li>
       <li>
-        <router-link to="/member">member</router-link>
+        <router-link to="/member">Member</router-link>
       </li>
     </ul>
-    <transition name="fade" mode="out-in" @after-enter="$store.commit('setOverlay', false)">
-      <router-view class="view"></router-view>
+    <transition name="fade" mode="out-in" @after-enter="$store.commit('view/end')">
+      <router-view class="view" />
     </transition>
-    <view-loading></view-loading>
+    <ViewLoading />
   </div>
 </template>
 <script>

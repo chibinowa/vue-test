@@ -2,21 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-import auth from './modules/auth'
-import member from './modules/member'
+import auth from './modules/auth.js'
+import member from './modules/member.js'
+import view from './modules/view.js'
 
 const store = new Vuex.Store({
   modules: {
+    view,
     auth,
     member
-  },
-  state: {
-    overlay: false
-  },
-  mutations: {
-    setOverlay(state, mode) {
-      state.overlay = mode
-    }
   },
   strict: process.env.NODE_ENV !== 'production'
 })

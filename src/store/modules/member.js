@@ -2,35 +2,38 @@ import Vue from 'vue'
 // 先に作ったAPIモジュールを使う
 import api from '@/api/member'
 // lodashの特定のメソッドだけ使う
-import { orderBy, findIndex, find } from 'lodash'
+import orderBy from 'lodash/orderBy'
+import findIndex from 'lodash/findIndex'
+import find from 'lodash/find'
 
 const member = {
   // ネームスペースを利用する
   namespaced: true,
   state: {
-    currentMember: null,
+    editId: -1,
+    editMember: {},
     members: [],
     error: null
   },
   getters: {
     // エラーメッセージを返す
-    error: (state) => state.error,
-    // カレントメンバーを返す
-    currentMember: (state) => state.currentMember,
+    error: state => state.error,
+    // 編集中の要素を返す
+    editMember: state => state.editMember,
     // メンバーリストを引数の項目でソートして返す
-    orderList: (state) => (field) =>
+    orderList: state => field =>
       orderBy(state.members, field, 'asc'),
     // メンバーリストのメンバーIDから配列インデックスを返す
-    findIndexById: (state) => (id) =>
+    findIndexById: state => id =>
       findIndex(state.members, o => o.id === id),
     // メンバーリストのメンバーIDからメンバー内容を返す
-    findMemberById: (state) => (id) =>
+    findMemberById: state => id =>
       find(state.members, o => o.id === id)
   },
   mutations: {
     // カレントメンバーをセット
     setCurrent(state, payload) {
-      state.currentMember = payload
+      state.editMember = payload
     },
     // メンバーリストを更新
     update(state, payload) {
@@ -47,6 +50,7 @@ const member = {
     },
     // メンバーリストを破棄
     destroy(state) {
+      state.editMember = null
       state.members = []
     },
     // エラーメッセージをセット
@@ -59,18 +63,26 @@ const member = {
     }
   },
   actions: {
-    // 全メンバーを読み込む
+    // メンバー詳細を読み込む
     get({ commit }, id) {
-      return api.getMember(id)
-        .then(entry => {
-          commit('setCurrent', entry)
-        })
+      commit('setCurrent', null)
+      return api.getMember(id).then(entry => {
+        commit('setCurrent', entry)
+      })
     },
+    // 全メンバーを読み込む
     load({ commit }) {
-      return api.getMembers()
-        .then(entry => {
-          commit('setList', entry)
-        })
+      return api.getMembers().then(entry => {
+        commit('setList', entry)
+      })
+    },
+    // 編集を開始
+    edit({ commit }, id) {
+      commit('setCurrent', {})
+      // フルデータを読み込む
+      return api.getMember(id).then(entry => {
+        commit('setCurrent', entry)
+      })
     },
     // メンバーを保存
     save({ commit }, member) {
@@ -91,15 +103,11 @@ const member = {
         })
     },
     // メンバーを削除
-    delete({ commit }, id) {
-      return api.deleteMember(id)
-        .then(entry => {
-          commit('destroy')
-          api.getMembers()
-            .then(entry => {
-              commit('setList', entry)
-            })
-        })
+    delete({ commit, dispatch }, id) {
+      return api.deleteMember(id).then(entry => {
+        commit('destroy')
+        dispatch('load')
+      })
     }
   }
 }

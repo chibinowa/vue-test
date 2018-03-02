@@ -1,31 +1,31 @@
 <template>
-  <div id="member-list">
+  <div class="member-list">
     <ul>
-      <li v-for="val in orderList('sort')" :key="val.id">
+      <li v-for="{ id, name, lv } in orderList('sort')" :key="id">
         <div class="name">
-          [{{ val.id }}]
-          <router-link :to="{name:'member-detail', params: { id: val.id }}">{{ val.name }}</router-link>
+          [{{ id }}]
+          <router-link :to="{ name:'member-detail', params: { id } }">{{ name }}</router-link>
         </div>
-        <div class="lv">Lv.{{ val.lv }}</div>
+        <div class="lv">Lv.{{ lv }}</div>
         <div class="control">
-          <button @click="$store.dispatch('member/delete', val.id)">削除</button>
-          <button @click="editid=val.id">編集</button>
+          <button @click="$store.dispatch('member/delete', id)">削除</button>
+          <button @click="edit(id)">編集</button>
         </div>
       </li>
     </ul>
     <div class="add">
       <button @click="editid=-1">追加</button>
     </div>
-    <control-member-modal :editid="editid" @close="editid=null" v-if="editid!=null"></control-member-modal>
+    <MemberModal :editid="editid" @close="editid=null" v-if="editid!=null" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import MemberModal from './Modal'
-import store from '@/vuex'
+import MemberModal from '@/components/Member/Modal.vue'
 export default {
-  name: 'member-list',
+  name: 'MemberList',
+  components: { MemberModal },
   data() {
     return {
       editid: null
@@ -33,18 +33,7 @@ export default {
   },
   computed: {
     ...mapGetters('member', ['orderList'])
-  },
-  beforeRouteEnter(route, redirect, next) {
-    store.dispatch('member/load').then(() => {
-      setTimeout(() => {
-        next()
-      }, 300)
-    })
-  },
-  beforeDestroy() {
-    this.$store.commit('member/destroy')
-  },
-  components: { 'control-member-modal': MemberModal }
+  }
 }
 </script>
 

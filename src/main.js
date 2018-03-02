@@ -6,21 +6,38 @@ import firebase from 'firebase'
 import Vue from 'vue'
 import App from '@/App'
 import router from '@/router'
-import store from '@/vuex'
+import store from '@/store'
 import { fireBaseConfig } from '@/firebase.config'
 Vue.config.productionTip = false
 
-// Firebase初期化
+// Firebaseの初期化
 firebase.initializeApp(fireBaseConfig)
 
-// 認証を初期化
-store.dispatch('auth/init').then(() => {
-  /* eslint-disable no-new */
-  new Vue({
-    store,
-    el: '#app',
-    router,
-    template: '<App/>',
-    components: { App }
-  })
+// Userの状態へのアクセスを簡単にする
+const userPlugin = {
+  install(Vue) {
+    Vue.mixin({
+      beforeCreate() {
+        Object.defineProperty(this, '$user', {
+          get() {
+            return store.getters['auth/user']
+          }
+        })
+      }
+    })
+  }
+}
+Vue.use(userPlugin)
+
+/* eslint-disable no-new */
+new Vue({
+  store,
+  el: '#app',
+  router,
+  components: { App },
+  template: '<App/>',
+  beforeCreate() {
+    // 認証の初期化
+    store.dispatch('auth/init')
+  }
 })

@@ -3,10 +3,8 @@
     <div id="member-modal" @click.self="$emit('close')">
       <div class="body">
         <h1>{{ title }}</h1>
-        <form>
-          <transition name="modal">
-            <div v-if="error" class="error" @click.self="$store.commit('member/resetError')">{{ error }}</div>
-          </transition>
+        <form @submit="onSaveMember">
+          <div v-if="error" class="error" @click.self="$store.commit('member/resetError')">{{ error }}</div>
           <dl>
             <dt>名前</dt>
             <dd>
@@ -42,34 +40,28 @@ export default {
         id: -1,
         name: 'noname',
         lv: 10
-      },
-      lock: false
+      }
     }
   },
   computed: {
     title() {
-      return this.editid === -1 ? '追加' : '編集'
+      return this.editid === -1 ? '追加' : 'クイック編集'
     },
     ...mapGetters('member', ['findMemberById', 'error'])
   },
   methods: {
     // 保存ボタン＆サブミットで内部データをストアに送る
     onSaveMember() {
-      if (this.lock === false) {
-        this.lock = true
-        setTimeout(() => {
-          this.lock = false
-        }, 2000)
-        this.$store.dispatch('member/save', this.intarnal).then(() => {
-          // 結果にエラーが無ければウィンドウを閉じる
-          // エラーがあればメッセージとして表示
-          if (!this.error) this.$emit('close')
-        })
-      }
+      this.$store.dispatch('member/save', this.intarnal).then(() => {
+        // 結果にエラーが無ければウィンドウを閉じる
+        // エラーがあればメッセージとして表示
+        if (!this.error) this.$emit('close')
+      })
     }
   },
   created() {
     if (this.editid > 0) {
+      // 編集なら初期化で状態を一時的にコピーする
       this.intarnal = cloneDeep(this.findMemberById(this.editid))
     }
   }

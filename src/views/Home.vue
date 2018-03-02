@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>home</h1>
-    <div class="content">
+    <div class="content" v-if="!$user.auth">
       <p>状態：{{ message }}</p>
       <dl>
         <dt>ID</dt>
@@ -14,17 +14,17 @@
         </dd>
       </dl>
       <button @click="login">ログイン</button>
+    </div>
+    <div class="content" v-else>
       <button @click="logout">ログアウト</button>
     </div>
   </div>
 </template>
 
 <script>
-// import axios from 'axios'
 import firebase from 'firebase'
-
 export default {
-  name: 'home',
+  name: 'Home',
   data() {
     return {
       email: '',
@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     message() {
-      if (this.$store.getters['auth/user'].auth) {
+      if (this.$user) {
         return 'ログイン中'
       } else {
         return 'ログインしてません'

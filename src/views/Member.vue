@@ -4,7 +4,7 @@
     <div class="child-view-wrapper">
       <transition name="child-view" mode="out-in">
         <keep-alive>
-          <router-view class="child-view"></router-view>
+          <router-view class="child-view" />
         </keep-alive>
       </transition>
     </div>
@@ -12,8 +12,19 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
-  name: 'member'
+  name: 'Member',
+  beforeRouteEnter(route, redirect, next) {
+    store.dispatch('member/load').then(() => {
+      setTimeout(() => {
+        next()
+      }, 100)
+    })
+  },
+  beforeDestroy() {
+    this.$store.commit('member/destroy')
+  }
 }
 </script>
 

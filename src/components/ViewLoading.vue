@@ -1,6 +1,6 @@
 <template>
   <transition name="router">
-    <div class="overlay" v-show="state">
+    <div class="overlay" v-show="loading">
       <div v-pre>
         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
           <rect x="0" y="13" width="4" height="5" fill="#bbb">
@@ -25,8 +25,8 @@
 export default {
   name: 'view-loading',
   computed: {
-    state() {
-      return this.$store.state.overlay
+    loading() {
+      return this.$store.state.view.loading
     }
   }}
 </script>
