@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1>home</h1>
-    <div class="content" v-if="!$user.auth">
-      <p>状態：{{ message }}</p>
+    <p>状態：{{ message }}</p>
+    <div class="content" v-if="!$user.auth" key="login">
       <dl>
         <dt>ID</dt>
         <dd>
@@ -12,11 +12,16 @@
         <dd>
           <input type="password" size="20" v-model="password">
         </dd>
+        <dt></dt>
+        <dd>
+          <form>
+            <button type="button" @click="login">ログイン</button>
+          </form>
+        </dd>
       </dl>
-      <button @click="login">ログイン</button>
     </div>
-    <div class="content" v-else>
-      <button @click="logout">ログアウト</button>
+    <div class="content" v-else key="logout">
+      <p><button type="button" @click="logout">ログアウト</button></p>
     </div>
   </div>
 </template>
@@ -33,7 +38,7 @@ export default {
   },
   computed: {
     message() {
-      if (this.$user) {
+      if (this.$user.auth) {
         return 'ログイン中'
       } else {
         return 'ログインしてません'

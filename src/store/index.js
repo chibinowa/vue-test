@@ -2,12 +2,14 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
+import toast from './modules/toast.js'
+import view from './modules/view.js'
 import auth from './modules/auth.js'
 import member from './modules/member.js'
-import view from './modules/view.js'
 
 const store = new Vuex.Store({
   modules: {
+    toast,
     view,
     auth,
     member
@@ -16,7 +18,10 @@ const store = new Vuex.Store({
 })
 
 if (module.hot) {
-  module.hot.accept(['./modules/auth', './modules/member'], () => {
+  module.hot.accept([
+    './modules/auth',
+    './modules/member'
+  ], () => {
     store.hotUpdate({
       modules: {
         auth: require('./modules/auth').default,

@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <ul>
-      <li>
+    <div class="header">
+      <nav>
         <router-link to="/" exact>Index</router-link>
-      </li>
-      <li>
         <router-link to="/member">Member</router-link>
-      </li>
-    </ul>
-    <transition name="fade" mode="out-in" @after-enter="$store.commit('view/end')">
+      </nav>
+    </div>
+
+    <transition name="view">
       <router-view class="view" />
     </transition>
+
     <ViewLoading />
   </div>
 </template>
@@ -25,11 +25,9 @@ export default {
 #app {
   color: #311d0a;
   font-family: 'Meiryo';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
-ul {
-  position: absolute;
+.header {
+  z-index: 2;
   display: flex;
   list-style: none;
   margin: 0;
@@ -38,8 +36,8 @@ ul {
   background: #d0af91;
   color: #fff;
 }
-ul a {
-  display: block;
+.header a {
+  display: inline-block;
   line-height: 40px;
   padding: 0 10px;
   text-decoration: none;
@@ -49,19 +47,19 @@ ul a {
   background: rgba(0, 0, 0, 0.1);
 }
 .view {
-  padding-top: 40px;
-  min-height: 100%;
+  position: relative;
   box-sizing: border-box;
+  min-height: calc(100% - 40px);
+  width: 100%;
 }
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.4s;
+.view-enter-active,
+.view-leave-active {
+  transition: all .5s;
 }
-.fade-enter,
-.fade-leave-to {
+.view-enter, .view-leave-to {
   opacity: 0;
 }
-.fade-enter {
+.view-leave-active {
   position: absolute;
 }
 </style>

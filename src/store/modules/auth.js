@@ -4,7 +4,9 @@ const auth = {
   namespaced: true,
   state: {
     user: {
+      // 認証済のフラグ
       init: false,
+      // 認証結果
       auth: false
     }
   },
@@ -13,8 +15,8 @@ const auth = {
     user: state => state.user
   },
   mutations: {
-    set(state, payload) {
-      state.user = payload
+    set(state, { user }) {
+      state.user = user
     },
     unset(state) {
       state.user = {
@@ -35,7 +37,7 @@ const auth = {
             uid: user.uid,
             email: user.email
           }
-          commit('set', profile)
+          commit('set', { user: profile })
         } else {
           commit('unset')
         }

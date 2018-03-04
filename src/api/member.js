@@ -1,62 +1,78 @@
+// デモ用 mockAPI
 // import axios from 'axios'
 import find from 'lodash/find'
+import findIndex from 'lodash/findIndex'
 import maxBy from 'lodash/maxBy'
-import remove from 'lodash/remove'
+import cloneDeep from 'lodash/cloneDeep'
 
-let LastId = 3
-const DemoDatabase = [
-  { 'id': 1, 'name': 'サーバル', 'lv': 30, 'sort': 2 },
-  { 'id': 2, 'name': 'フェネック', 'lv': 20, 'sort': 3 },
-  { 'id': 3, 'name': 'アライさん', 'lv': 10, 'sort': 1 }
-]
-
-// デモ用 mockAPI
-const demox = {
-  get: (path, arg) => new Promise(resolve => {
-    const delay = [0, 0, 400, 1000]
-    if (path === '/vue-test/api/member/list') {
-      resolve({ data: { status: true, entry: DemoDatabase } })
-    } else {
-      setTimeout(() => {
-        resolve({ data: { status: true, entry: find(DemoDatabase, o => o.id === arg.id) } })
-      }, delay[Math.floor(Math.random() * delay.length)])
-    }
-  }),
-  put: (path, arg) => demoTimer().then(() => {
-    return { data: { status: true, entry: arg.item } }
-  }),
-  post: (path, arg) => demoTimer().then(() => {
-    const maxSort = maxBy(DemoDatabase, 'sort')
-    const newdata = Object.assign({}, arg.item, {
-      id: ++LastId,
-      sort: maxSort ? maxSort.sort + 1 : 0,
-      name: arg.item.name === '' ? 'noname' : arg.item.name,
-      lv: arg.item.lv === '' ? 10 : arg.item.lv
+// サーバー処理の代わり
+const Database = {
+  autoincrement: 3,
+  member: [
+    { id: 1, name: 'サーバル', lv: 30, sort: 2 },
+    { id: 2, name: 'フェネック', lv: 20, sort: 3 },
+    { id: 3, name: 'アライさん', lv: 10, sort: 1 }
+  ],
+  fetch() {
+    return { status: true, entry: this.member }
+  },
+  find(id) {
+    return { status: true, entry: find(this.member, o => o.id === id) }
+  },
+  push(member) {
+    const maxSort = maxBy(this.member, 'sort')
+    const newdata = Object.assign({}, member, {
+      id: ++this.autoincrement,
+      sort: maxSort !== undefined ? maxSort.sort + 1 : 1,
+      name: member.name === '' ? 'noname' : member.name,
+      lv: member.lv === '' ? 10 : member.lv
     })
-    return { data: { status: true, entry: newdata } }
-  }),
-  delete: (path, arg) => demoTimer().then(() => {
-    remove(DemoDatabase, o => o.id === arg.id)
-    return { data: { status: true } }
-  })
+    this.member.push(newdata)
+    return { status: true, entry: newdata }
+  },
+  update(member) {
+    const index = findIndex(this.member, el => el.id === member.id)
+    this.member[index] = member
+    return { status: true, entry: member }
+  },
+  delete(id) {
+    this.member = this.member.filter(el => el.id !== id)
+    return { status: true }
+  }
 }
 
-// 疑似遅延用タイマー
-const demoTimer = () => {
-  return new Promise((resolve) => setTimeout(resolve, 400))
+// const delay = [0, 0, 400, 1000]
+// delay[Math.floor(Math.random() * delay.length)]
+
+// axiosの代わり
+const demox = {
+  get: (path) => new Promise((resolve, reject) => {
+    resolve({ data: cloneDeep(Database.fetch()) })
+  }),
+  put: (path, arg) => new Promise(resolve => {
+    resolve({ data: cloneDeep(Database.update(arg.item)) })
+  }),
+  post: (path, arg) => new Promise(resolve => {
+    resolve({ data: cloneDeep(Database.push(arg.item)) })
+  }),
+  delete: (path, arg) => new Promise(resolve => {
+    resolve({ data: cloneDeep(Database.delete(arg.id)) })
+  })
 }
 
 // 通信成功の処理
 const apiSuccess = response => {
   if (response.data.status === true) {
-    return Promise.resolve(response.data.entry)
+    return response.data.entry
   } else {
     return Promise.reject('APIによるエラー')
   }
 }
 
 // 通信失敗の処理
-const apiError = (error) => Promise.reject(error.message || error || 'ERROR')
+const apiError = error => {
+  console.error('ERROR:', error)
+}
 
 /*
 GET    /member/list/:page   リスト取得 最大10件づつ
@@ -67,13 +83,11 @@ DELETE /member/:id          削除
 */
 export default {
   getMembers: () =>
-    demox.get('/vue-test/api/member/list').then(apiSuccess),
+    demox.get('/vue-test/api/member/list').then(apiSuccess).catch(apiError),
   postMember: (id, item) =>
-    demox.post('/vue-test/api/member', { item: item }).then(apiSuccess).catch(apiError),
-  getMember: (id) =>
-    demox.get(`/vue-test/api/member/${id}`, { id: id }).then(apiSuccess).catch(apiError),
+    demox.post('/vue-test/api/member', { item }).then(apiSuccess).catch(apiError),
   putMember: (id, item) =>
-    demox.put(`/vue-test/api/member/${id}`, { item: item }).then(apiSuccess).catch(apiError),
+    demox.put(`/vue-test/api/member/${id}`, { item }).then(apiSuccess).catch(apiError),
   deleteMember: (id) =>
-    demox.delete(`/vue-test/api/member/${id}`, { id: id }).then(apiSuccess).catch(apiError)
+    demox.delete(`/vue-test/api/member/${id}`, { id }).then(apiSuccess).catch(apiError)
 }

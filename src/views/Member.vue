@@ -16,10 +16,11 @@ import store from '@/store'
 export default {
   name: 'Member',
   beforeRouteEnter(route, redirect, next) {
+    // 読み込みの遅いページの例
     store.dispatch('member/load').then(() => {
       setTimeout(() => {
         next()
-      }, 100)
+      }, 500)
     })
   },
   beforeDestroy() {

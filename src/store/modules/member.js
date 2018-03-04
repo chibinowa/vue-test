@@ -1,112 +1,100 @@
-import Vue from 'vue'
 // 先に作ったAPIモジュールを使う
 import api from '@/api/member'
-// lodashの特定のメソッドだけ使う
+// Lodash
 import orderBy from 'lodash/orderBy'
-import findIndex from 'lodash/findIndex'
 import find from 'lodash/find'
 
 const member = {
   // ネームスペースを利用する
   namespaced: true,
   state: {
-    editId: -1,
-    editMember: {},
-    members: [],
-    error: null
+    editId: null,
+    members: []
   },
   getters: {
-    // エラーメッセージを返す
-    error: state => state.error,
     // 編集中の要素を返す
-    editMember: state => state.editMember,
+    editId: state => state.editId,
+    // 編集中の要素を返す
+    editMember: state => {
+      if (state.editId !== -1) {
+        return find(state.members, o => o.id === state.editId)
+      } else {
+        return {
+          id: -1,
+          name: 'noname',
+          lv: 10
+        }
+      }
+    },
     // メンバーリストを引数の項目でソートして返す
     orderList: state => field =>
       orderBy(state.members, field, 'asc'),
-    // メンバーリストのメンバーIDから配列インデックスを返す
-    findIndexById: state => id =>
-      findIndex(state.members, o => o.id === id),
     // メンバーリストのメンバーIDからメンバー内容を返す
     findMemberById: state => id =>
       find(state.members, o => o.id === id)
   },
   mutations: {
-    // カレントメンバーをセット
-    setCurrent(state, payload) {
-      state.editMember = payload
-    },
-    // メンバーリストを更新
-    update(state, payload) {
-      const idx = findIndex(state.members, o => o.id === payload.id)
-      Vue.set(state.members, idx, payload)
+    // 編集中のIDをセット
+    setEditId(state, { id }) {
+      state.editId = id
     },
     // メンバーリストをセット
-    setList(state, members) {
+    setList(state, { members }) {
       state.members = members
     },
-    // メンバーリストに追加
-    add(state, payload) {
-      state.members.push(payload)
+    // メンバーを追加
+    add(state, { newdata }) {
+      state.members.push(newdata)
+    },
+    // メンバーを更新
+    update(state, { member, newdata }) {
+      member.name = newdata.name
+      member.lv = newdata.lv
+    },
+    // メンバーを削除
+    delete(state, { id }) {
+      state.members = state.members.filter(el => el.id !== id)
     },
     // メンバーリストを破棄
     destroy(state) {
-      state.editMember = null
       state.members = []
-    },
-    // エラーメッセージをセット
-    setError(state, msg) {
-      state.error = msg
-    },
-    // エラーメッセージをリセット
-    resetError(state) {
-      state.error = null
     }
   },
   actions: {
-    // メンバー詳細を読み込む
-    get({ commit }, id) {
-      commit('setCurrent', null)
-      return api.getMember(id).then(entry => {
-        commit('setCurrent', entry)
-      })
-    },
     // 全メンバーを読み込む
     load({ commit }) {
-      return api.getMembers().then(entry => {
-        commit('setList', entry)
+      return api.getMembers().then(members => {
+        commit('setList', { members })
+      }).catch(error => {
+        commit('toast/add', error, { root: true })
       })
     },
     // 編集を開始
-    edit({ commit }, id) {
-      commit('setCurrent', {})
-      // フルデータを読み込む
-      return api.getMember(id).then(entry => {
-        commit('setCurrent', entry)
-      })
+    doEdit({ commit, getters }, id) {
+      commit('setEditId', { id })
     },
     // メンバーを保存
-    save({ commit }, member) {
+    doSave({ commit, getters }, newdata) {
       // IDが-1なら追加
-      const type = member.id === -1 ? api.postMember : api.putMember
-      return type(member.id, member)
-        .then(entry => {
-          // サーバー側で成功したらフロントのデータを更新
-          if (member.id === -1) {
-            commit('add', entry)
-          } else {
-            commit('update', entry)
-          }
+      if (newdata.id === -1) {
+        return api.postMember(newdata.id, newdata).then(newdata => {
+          commit('add', { newdata })
+        }).catch(error => {
+          commit('toast/add', error, { root: true })
         })
-        .catch(error => {
-          // サーバー側で失敗したらエラーをセット
-          commit('setError', error)
+      } else {
+        return api.putMember(newdata.id, newdata).then(newdata => {
+          const member = getters.findMemberById(newdata.id)
+          commit('update', { member, newdata })
+        }).catch(error => {
+          commit('toast/add', error, { root: true })
         })
+      }
     },
     // メンバーを削除
-    delete({ commit, dispatch }, id) {
-      return api.deleteMember(id).then(entry => {
-        commit('destroy')
-        dispatch('load')
+    doDelete({ commit, dispatch }, id) {
+      api.deleteMember(id).then(entry => {
+        commit('delete', { id })
       })
     }
   }
