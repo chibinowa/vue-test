@@ -1,28 +1,24 @@
 <template>
   <transition name="modal">
-    <div id="member-modal" @click.self="$emit('close')">
-      <div class="body">
+    <div class="member-modal" @click.self="$emit('close')">
+      <div class="member-modal-body">
         <h1>{{ title }}</h1>
-        <form @submit="onSaveMember">
+        <form @submit.prevent="onSaveMember">
           <dl>
             <dt>名前</dt>
-            <dd>
-              <input v-model="intarnal.name">
-            </dd>
+            <dd><input v-model="intarnal.name"></dd>
             <dt>レベル</dt>
-            <dd>
-              <input v-model.number="intarnal.lv" size="3">
-            </dd>
+            <dd><input v-model.number="intarnal.lv" size="3"></dd>
           </dl>
+          <footer>
+            <div class="left">
+              <button type="button" @click="$emit('close')">閉じる</button>
+            </div>
+            <div class="right">
+              <button type="submit">保存する</button>
+            </div>
+          </footer>
         </form>
-        <footer>
-          <div class="left">
-            <button type="button" @click="$emit('close')">閉じる</button>
-          </div>
-          <div class="right">
-            <button type="button" @click="onSaveMember">保存する</button>
-          </div>
-        </footer>
       </div>
     </div>
   </transition>
@@ -42,10 +38,10 @@ export default {
     title() {
       return this.editid === -1 ? '追加' : 'クイック編集'
     },
-    ...mapGetters('member', ['editMember'])
+    ...mapGetters('member', ['editTemplate'])
   },
   methods: {
-    // 保存ボタン＆サブミットで内部データをストアに送る
+    // 保存ボタンを押したら内部データをストアに送る
     onSaveMember() {
       this.$store.dispatch('member/doSave', this.intarnal).then(() => {
         // 結果にエラーが無ければウィンドウを閉じる
@@ -56,12 +52,12 @@ export default {
   },
   created() {
     // 初期化で状態を一時的にコピーする
-    this.intarnal = cloneDeep(this.editMember)
+    this.intarnal = cloneDeep(this.editTemplate)
   }
 }
 </script>
 <style scoped>
-#member-modal {
+.member-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -87,6 +83,7 @@ footer {
 }
 dl {
   margin: 0;
+  padding: 10px;
 }
 dl::after {
   display: table;
@@ -105,19 +102,11 @@ dd {
   margin: 0;
   padding: 5px;
 }
-.error {
-  padding: 6px 10px;
-  border-radius: 2px;
-  background: #ffe4e4;
-  color: #d40000;
-}
-.body {
+.member-modal-body {
   width: 400px;
   background: #fff;
 }
-form {
-  padding: 10px;
-}
+
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.4s;

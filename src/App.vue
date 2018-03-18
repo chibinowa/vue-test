@@ -64,6 +64,7 @@ export default {
 }
 </style>
 <style>
+* { box-sizing: border-box; }
 html,
 body,
 #app {

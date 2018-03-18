@@ -13,21 +13,19 @@ Vue.config.productionTip = false
 // Firebaseの初期化
 firebase.initializeApp(fireBaseConfig)
 
-// Userの状態へのアクセスを簡単にする
-const userPlugin = {
+// Userの状態へのアクセスを簡略化するプラグイン
+Vue.use({
   install(Vue) {
     Vue.mixin({
       beforeCreate() {
+        // すべてのコンポーネントからストアのユーザー状態を参照する
         Object.defineProperty(this, '$user', {
-          get() {
-            return store.getters['auth/user']
-          }
+          get: () => store.getters['auth/user']
         })
       }
     })
   }
-}
-Vue.use(userPlugin)
+})
 
 /* eslint-disable no-new */
 new Vue({

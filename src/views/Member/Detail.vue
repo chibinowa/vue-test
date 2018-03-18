@@ -13,28 +13,15 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   name: 'MemberDetail',
   props: { id: Number },
-  data() {
-    return {
-      member: {},
-      isLoading: true,
-      boxHeight: 40
+  computed: {
+    ...mapGetters('member', ['findMemberById']),
+    member() {
+      return this.findMemberById(this.id)
     }
-  },
-  computed: mapGetters('member', ['findMemberById']),
-  watch: {
-    id: {
-      handler() {
-        this.member = this.findMemberById(this.id)
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    ...mapActions('member', ['get'])
   }
 }
 </script>

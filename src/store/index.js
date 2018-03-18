@@ -2,10 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-import toast from './modules/toast.js'
-import view from './modules/view.js'
-import auth from './modules/auth.js'
-import member from './modules/member.js'
+import toast from './modules/toast'
+import view from './modules/view'
+import auth from './modules/auth'
+import member from './modules/member'
 
 const store = new Vuex.Store({
   modules: {

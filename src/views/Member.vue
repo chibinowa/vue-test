@@ -21,6 +21,8 @@ export default {
       setTimeout(() => {
         next()
       }, 500)
+    }).catch(e => {
+      next(false)
     })
   },
   beforeDestroy() {

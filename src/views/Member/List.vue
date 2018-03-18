@@ -39,7 +39,7 @@ export default {
     orderList: {
       handler() {
         this.$nextTick(() => {
-          this.boxHeight = this.$refs.list.$el.offsetHeight
+          this.boxHeight = this.$refs.list.$el.getBoundingClientRect().height
         })
       },
       immediate: true
@@ -51,14 +51,13 @@ export default {
       return this.$store.getters['member/orderList']('sort')
     }
   },
-  methods: {
-    ...mapActions('member', ['doEdit', 'doDelete'])
-  }
+  methods: mapActions('member', ['doEdit', 'doDelete'])
 }
 </script>
 
 <style scoped>
 .list-wrapper {
+  box-sizing: content-box;
   position: relative;
   border: 2px solid #ccc;
   border-radius: 4px;
@@ -69,7 +68,6 @@ export default {
   min-height: 40px;
 }
 .list {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
   border-radius: 4px;
@@ -99,7 +97,7 @@ export default {
   width: 50px;
 }
 .control {
-  width: 120px;
+  width: 130px;
   text-align: right;
 }
 .add {

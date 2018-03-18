@@ -1,6 +1,6 @@
 import firebase from 'firebase'
 
-const auth = {
+export default {
   namespaced: true,
   state: {
     user: {
@@ -45,5 +45,3 @@ const auth = {
     }
   }
 }
-
-export default auth

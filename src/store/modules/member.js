@@ -4,7 +4,7 @@ import api from '@/api/member'
 import orderBy from 'lodash/orderBy'
 import find from 'lodash/find'
 
-const member = {
+export default {
   // ネームスペースを利用する
   namespaced: true,
   state: {
@@ -12,10 +12,10 @@ const member = {
     members: []
   },
   getters: {
-    // 編集中の要素を返す
+    // 編集中の要素IDを返す
     editId: state => state.editId,
-    // 編集中の要素を返す
-    editMember: state => {
+    // 編集要素のテンプレートを返す
+    editTemplate: state => {
       if (state.editId !== -1) {
         return find(state.members, o => o.id === state.editId)
       } else {
@@ -67,6 +67,7 @@ const member = {
         commit('setList', { members })
       }).catch(error => {
         commit('toast/add', error, { root: true })
+        return Promise.reject()
       })
     },
     // 編集を開始
@@ -99,5 +100,3 @@ const member = {
     }
   }
 }
-
-export default member

@@ -62,16 +62,18 @@ const demox = {
 
 // 通信成功の処理
 const apiSuccess = response => {
-  if (response.data.status === true) {
-    return response.data.entry
-  } else {
-    return Promise.reject('APIによるエラー')
-  }
+  return new Promise((resolve, reject) => {
+    if (response.data.status === true) {
+      resolve(response.data.entry)
+    } else {
+      reject('APIによるエラー')
+    }
+  })
 }
 
 // 通信失敗の処理
 const apiError = error => {
-  console.error('ERROR:', error)
+  return Promise.reject(error)
 }
 
 /*

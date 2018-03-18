@@ -56,8 +56,8 @@ router.beforeEach((to, from, next) => {
     if (store.getters['auth/init'] !== true) {
       // まだ認証していなければ init が更新されるのを監視
       const unwatch = store.watch((state, getters) => getters['auth/init'], () => {
-        nextAuth(to, from, next)
         unwatch()
+        nextAuth(to, from, next)
       })
     } else {
       // 認証済みならすぐ確認
