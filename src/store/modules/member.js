@@ -1,5 +1,5 @@
 // 先に作ったAPIモジュールを使う
-import api from '@/api/member'
+import { member as api } from '@/api/member'
 // Lodash
 import orderBy from 'lodash/orderBy'
 import find from 'lodash/find'
@@ -78,13 +78,13 @@ export default {
     doSave({ commit, getters }, newdata) {
       // IDが-1なら追加
       if (newdata.id === -1) {
-        return api.postMember(newdata.id, newdata).then(newdata => {
+        api.postMember(newdata.id, newdata).then(newdata => {
           commit('add', { newdata })
         }).catch(error => {
           commit('toast/add', error, { root: true })
         })
       } else {
-        return api.putMember(newdata.id, newdata).then(newdata => {
+        api.putMember(newdata.id, newdata).then(newdata => {
           const member = getters.findMemberById(newdata.id)
           commit('update', { member, newdata })
         }).catch(error => {

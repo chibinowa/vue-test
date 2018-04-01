@@ -60,30 +60,24 @@ const demox = {
   })
 }
 
-// 通信成功の処理
+// 成功処理
 const apiSuccess = response => {
-  return new Promise((resolve, reject) => {
-    if (response.data.status === true) {
-      resolve(response.data.entry)
-    } else {
-      reject('APIによるエラー')
-    }
-  })
+  if (response.data.status === true) {
+    return Promise.resolve(response.data.entry)
+  } else {
+    return Promise.reject(response.data.message)
+  }
 }
-
-// 通信失敗の処理
+// 失敗処理
 const apiError = error => {
-  return Promise.reject(error)
+  if (typeof error === 'string') {
+    return Promise.reject(error)
+  } else {
+    return Promise.reject('APIに接続できません')
+  }
 }
 
-/*
-GET    /member/list/:page   リスト取得 最大10件づつ
-POST   /member              新規作成
-GET    /member/:id          取得
-PUT    /member/:id          更新
-DELETE /member/:id          削除
-*/
-export default {
+export const member = {
   getMembers: () =>
     demox.get('/vue-test/api/member/list').then(apiSuccess).catch(apiError),
   postMember: (id, item) =>

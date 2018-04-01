@@ -22,6 +22,7 @@ export default {
         next()
       }, 500)
     }).catch(e => {
+      store.commit('view/end')
       next(false)
     })
   },
